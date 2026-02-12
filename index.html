@@ -20,6 +20,10 @@
                 <span class="label">Total Earnings</span>
                 <h2 id="total-amount">0 EGP</h2>
             </div>
+            <div class="total-card today-card">
+                <span class="label">Today's Earnings</span>
+                <h2 id="today-amount">0 EGP</h2>
+            </div>
         </header>
 
         <main>
@@ -30,7 +34,10 @@
 
             <div class="list-header">
                 <h3>History</h3>
-                <button class="clear-btn" onclick="confirmClear()">Clear All</button>
+                <div class="header-actions">
+                    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+                    <button class="clear-btn" onclick="confirmClear()">Clear All</button>
+                </div>
             </div>
             
             <ul id="income-list" class="income-list">

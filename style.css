@@ -58,6 +58,10 @@ h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.today-card {
+    background: linear-gradient(135deg, #1565C0, #0D47A1); /* Blue gradient */
+}
+
 .total-card .label {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
@@ -132,12 +136,22 @@ button:active {
     color: var(--text-secondary);
 }
 
-.clear-btn {
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.clear-btn, .export-btn {
     background: transparent;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    padding: 8px 12px;
+    font-size: 0.8rem;
+    padding: 6px 10px;
     border: 1px solid #333;
+}
+
+.export-btn {
+    color: var(--primary-color);
+    border-color: #333;
 }
 
 .income-list {

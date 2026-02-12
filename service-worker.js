@@ -5,7 +5,7 @@ const ASSETS_TO_CACHE = [
     './style.css',
     './script.js',
     './manifest.json',
-    'https://cdn-icons-png.flaticon.com/512/2641/2641409.png', // Cache the icon
+    './icon.png', // Cache the icon
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
 ];
 

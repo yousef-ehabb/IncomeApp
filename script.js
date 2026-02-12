@@ -5,6 +5,7 @@ let incomes = JSON.parse(localStorage.getItem('indriver_incomes')) || [];
 const inputEl = document.getElementById('income-input');
 const listEl = document.getElementById('income-list');
 const totalEl = document.getElementById('total-amount');
+const todayEl = document.getElementById('today-amount');
 const modalEl = document.getElementById('confirm-modal');
 
 // Initial Render
@@ -64,10 +65,45 @@ function saveData() {
     localStorage.setItem('indriver_incomes', JSON.stringify(incomes));
 }
 
+function exportCSV() {
+    if (incomes.length === 0) {
+        alert('No data to export');
+        return;
+    }
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "ID,Amount,Date\n";
+
+    incomes.forEach(function(item) {
+        let row = `${item.id},${item.amount},"${item.date}"`;
+        csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "indriver_income.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 function render() {
     // Calculate Total
     const total = incomes.reduce((sum, item) => sum + item.amount, 0);
     totalEl.textContent = total.toLocaleString() + ' EGP';
+
+    // Calculate Today's Total
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    const todayTotal = incomes.reduce((sum, item) => {
+        if (item.id >= startOfDay) {
+            return sum + item.amount;
+        }
+        return sum;
+    }, 0);
+    todayEl.textContent = todayTotal.toLocaleString() + ' EGP';
 
     // Render List
     listEl.innerHTML = '';
