@@ -4,40 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>InDriver Income</title>
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#0F0F0F">
     <meta name="description" content="Simple offline income tracker for drivers">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <h1>My Income</h1>
-            <div class="total-card">
-                <span class="label">Total Earnings</span>
-                <h2 id="total-amount">0 EGP</h2>
+        
+        <!-- GLOBAL STICKY SHIFT BAR -->
+        <div id="global-shift-bar" class="global-shift-bar floating-pill" style="display:none">
+            <div class="shift-bar-info" style="flex-direction:row; align-items:center; gap:12px;">
+                <div class="shift-pulse-dot"></div>
+                <div style="display:flex; flex-direction:column;">
+                    <span id="shift-timer-display" class="shift-timer-display">00:00:00</span>
+                    <span id="shift-earnings-live" class="shift-live-value">0 EGP</span>
+                </div>
+                <span id="shift-hourly-live" style="display:none">0 EGP/hr</span>
             </div>
-        </header>
+            <button id="shift-end-btn" disabled>
+                <span class="end-btn-label">Hold to End</span>
+                <span class="end-btn-progress"></span>
+            </button>
+        </div>
 
         <main>
-            <div class="input-group">
-                <input type="number" id="income-input" placeholder="Enter amount (EGP)" inputmode="decimal">
-                <button id="add-btn" onclick="addIncome()">Add Income</button>
-            </div>
+            <!-- ============ TAB 1: SHIFT (HOME) ============ -->
+            <section id="tab-home" class="tab-panel active">
+                <header class="hero-header">
+                    <div class="total-card hero-net">
+                        <span class="label">TODAY'S NET</span>
+                        <h2 id="net-income">0</h2>
+                        <span class="currency-label">EGP</span>
+                        <div class="gross-subtitle">Gross: <span id="total-amount">0 EGP</span></div>
+                    </div>
+                </header>
 
-            <div class="list-header">
-                <h3>History</h3>
-                <button class="clear-btn" onclick="confirmClear()">Clear All</button>
-            </div>
-            
-            <ul id="income-list" class="income-list">
-                <!-- List items will be injected here -->
-                <li class="empty-state">No rides recorded yet.</li>
-            </ul>
+                <div class="compact-summary">
+                    <div class="list-header" style="display:none;">
+                        <h3>Last Ride Logged</h3>
+                    </div>
+                    <ul id="income-list" class="income-list compact">
+                        <li class="empty-state">
+                            <span>Ready to hit the road.</span>
+                        </li>
+                    </ul>
+
+                    <div class="list-header" style="display:none;">
+                        <h3>Last Expense</h3>
+                    </div>
+                    <ul id="expense-list" class="expense-list compact">
+                        <!-- Hidden by default, JS handles this dummy element gracefully -->
+                    </ul>
+                </div>
+
+                <div class="shift-controls-container thumb-zone-bottom">
+                    <button id="shift-start-btn" onclick="startShift()" class="massive-action-btn">START SHIFT</button>
+
+                    <!-- Hidden by default, toggled by JS when shift starts -->
+                    <div id="shift-timer-row" class="active-shift-workspace" style="display:none;">
+                        
+                        <!-- Quick Fare Chips -->
+                        <div class="quick-add-chips">
+                            <button type="button" class="fare-chip" onclick="addQuickFare(30, this)">+30</button>
+                            <button type="button" class="fare-chip" onclick="addQuickFare(50, this)">+50</button>
+                            <button type="button" class="fare-chip" onclick="addQuickFare(100, this)">+100</button>
+                            <button type="button" class="fare-chip" onclick="addQuickFare(150, this)">+150</button>
+                        </div>
+
+                        <!-- Primary Action: Fare -->
+                        <div class="input-group primary-action">
+                            <input type="number" id="income-input" placeholder="0.00" inputmode="decimal">
+                            <button id="add-btn" onclick="addIncome()" class="micro-interaction-btn">Add Fare</button>
+                        </div>
+                        
+                        <!-- Secondary Action: Expense -->
+                        <div class="input-group secondary-action">
+                            <div class="expense-category-pills">
+                                <button type="button" class="category-pill active" onclick="selectExpenseCategory(this, 'Fuel')">Fuel</button>
+                                <button type="button" class="category-pill" onclick="selectExpenseCategory(this, 'Car Wash')">Wash</button>
+                                <button type="button" class="category-pill" onclick="selectExpenseCategory(this, 'Maintenance')">Maint</button>
+                                <button type="button" class="category-pill" onclick="selectExpenseCategory(this, 'Other')">Other</button>
+                            </div>
+                            
+                            <div class="expense-input-row">
+                                <input type="number" id="expense-input" placeholder="Expense" inputmode="decimal" style="height:48px; flex:1;">
+                                <button id="add-expense-btn" onclick="addExpense()" class="micro-interaction-btn-secondary" style="height:48px; padding:0 24px;">Log</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ TAB 2: HISTORY ============ -->
+            <section id="tab-log" class="tab-panel">
+                <div class="tab-panel-header history-header">
+                    <h1>History</h1>
+                    <div class="export-buttons mini-export">
+                        <button id="export-csv-btn" onclick="exportCSV()">CSV</button>
+                        <button id="export-pdf-btn" onclick="exportPDF()">PDF</button>
+                    </div>
+                </div>
+
+                <!-- Hidden total expenses just to keep JS alive -->
+                <div style="display:none">
+                    <h3 id="total-expenses">0 EGP</h3>
+                    <button class="clear-btn" onclick="confirmClear()">Clear All</button>
+                </div>
+
+                <ul id="shift-history-list" class="shift-history-list history-tab-view">
+                    <li class="empty-state">
+                        <span>No completed shifts yet.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ============ TAB 3: ANALYTICS ============ -->
+            <section id="tab-stats" class="tab-panel">
+                <div class="tab-panel-header">
+                    <h1>Analytics</h1>
+                </div>
+
+                <div id="analytics-section">
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <span class="stat-label">Today</span>
+                            <span class="stat-value" id="stat-today">0 EGP</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">This week</span>
+                            <span class="stat-value" id="stat-week">0 EGP</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Best day</span>
+                            <span class="stat-value" id="stat-best">0 EGP</span>
+                        </div>
+                    </div>
+
+                    <div class="tab-bar">
+                        <button id="tab-weekly" class="tab-btn active" onclick="switchTab('weekly')">Weekly</button>
+                        <button id="tab-monthly" class="tab-btn" onclick="switchTab('monthly')">Monthly</button>
+                    </div>
+
+                    <div id="chart-container">
+                        <canvas id="earnings-chart"></canvas>
+                    </div>
+                </div>
+
+                <div id="goal-section">
+                    <div class="goal-header">
+                        <span class="goal-title">Daily Goal</span>
+                        <div class="goal-input-row">
+                            <input type="number" id="goal-input" placeholder="Set goal" inputmode="decimal">
+                            <button onclick="setDailyGoal()">Set</button>
+                        </div>
+                    </div>
+
+                    <div class="goal-progress-bar-bg">
+                        <div id="goal-bar-fill" class="goal-bar-fill"></div>
+                    </div>
+
+                    <div class="goal-meta">
+                        <span id="goal-progress-text"></span>
+                        <span id="goal-status"></span>
+                    </div>
+                </div>
+            </section>
         </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-tab="home">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="nav-label">Shift</span>
+            </button>
+            <button class="nav-btn" data-tab="log">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span class="nav-label">History</span>
+            </button>
+            <button class="nav-btn" data-tab="stats">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span class="nav-label">Analytics</span>
+            </button>
+        </nav>
+
+        <!-- Undo Toast -->
+        <div id="undo-toast" class="undo-toast hidden">
+            <span class="undo-toast-text">Entry deleted</span>
+            <button id="undo-toast-btn" class="undo-toast-action" onclick="undoDelete()">Undo</button>
+        </div>
     </div>
 
     <!-- Simple confirmation modal -->
@@ -51,6 +209,9 @@
         </div>
     </div>
 
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
     <script>
         // Register Service Worker
@@ -61,6 +222,23 @@
                     .catch(err => console.log('SW registration failed', err));
             });
         }
+
+        // Tab switching
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+                btn.classList.add('active');
+                // Re-render chart when Stats tab opens (canvas resize fix)
+                if (btn.dataset.tab === 'stats' && typeof chartInstance !== 'undefined' && chartInstance) {
+                    setTimeout(() => {
+                        chartInstance.resize();
+                        renderAnalytics();
+                    }, 60);
+                }
+            });
+        });
     </script>
 </body>
 </html>
