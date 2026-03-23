@@ -525,3 +525,61 @@ window.addEventListener('load', function() {
         updateShiftUI();
     }
 });
+
+let currentExpenseCategory = 'Fuel';
+
+function selectExpenseCategory(btnEl, category) {
+    currentExpenseCategory = category;
+    document.querySelectorAll('.category-pill').forEach(btn => btn.classList.remove('active'));
+    btnEl.classList.add('active');
+    if (navigator.vibrate) navigator.vibrate(20);
+}
+
+function addExpense() {
+    const amountVal = expenseInputEl.value;
+    const category = currentExpenseCategory;
+
+    if (!amountVal || amountVal <= 0) {
+        showError(expenseInputEl);
+        return;
+    }
+
+    const newExpense = {
+        id: Date.now(),
+        amount: parseFloat(amountVal),
+        category: category,
+        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    // Add to beginning of array
+    expenses.unshift(newExpense);
+    saveData();
+    render();
+
+    // Reset and feedback
+    showSuccess(expenseInputEl);
+    expenseInputEl.value = '';
+    
+    // Reset category visually and in state
+    currentExpenseCategory = 'Fuel';
+    const fuelPill = document.querySelector('.category-pill');
+    if (fuelPill) {
+        document.querySelectorAll('.category-pill').forEach(btn => btn.classList.remove('active'));
+        fuelPill.classList.add('active');
+    }
+    
+    expenseInputEl.focus(); // Faster subsequent entry
+    if (navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+}
+
+function deleteExpense(id) {
+    const index = expenses.findIndex(exp => exp.id === id);
+    if (index === -1) return;
+    const deleted = expenses.splice(index, 1)[0];
+    saveData();
+    render();
+    showUndoToast(deleted, index, 'expense');
+    if (navigator.vibrate) navigator.vibrate(40);
+}
+
+// --- Undo Last Entry (from last-entry widget) ---
