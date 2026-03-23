@@ -1,15 +1,23 @@
 # InDriver Income Tracker 🚗💸
 
-A simple, offline-capable app to track your daily income.
+A professional, offline-capable progressive web application (PWA) designed to track daily income and expenses for drivers.
+
+## Versions
+
+*   **v1.0** — Basic income tracker: simple gross income calculation and logging.
+*   **v2.0** — Real-time, shift-based income tracking system featuring:
+    *   **Shift Tracking**: Live session management with precise timers and state persistence.
+    *   **Expense System**: Granular categorization (Fuel, Wash, Maintenance) and live net income calculation.
+    *   **Analytics**: Comprehensive dashboards featuring dynamic charts (weekly/monthly) and performance insights.
+    *   **Improved UX**: Streamlined "shift-first" interface, quick-fare input chips, 5-second undo system, and strict visual hierarchy.
 
 ## Features
-- ⚡ **Offline Ready**: Works without internet.
-- 💾 **Auto-Save**: Data is saved on your phone.
-- 🌙 **Dark Mode**: Easy on the eyes at night.
-- 💰 **Total Calculation**: See your earnings instantly.
+- ⚡ **Offline Ready**: Functions seamlessly without an internet connection.
+- 💾 **Auto-Save**: Secure local storage on your device.
+- 🌙 **Dark Mode**: High-contrast, easy-to-read interface optimized for nighttime driving.
+- 📊 **Dynamic Reports**: Export history in CSV or generate beautiful PDF summaries.
 
 ## How to Install on Android 📲
-
 Since this is a Web App, it needs to be "hosted" or opened in a browser.
 
 ### Option 1: The Easiest Way (Recommended)
@@ -22,7 +30,7 @@ Since this is a Web App, it needs to be "hosted" or opened in a browser.
 3. **Install**:
    - Tap the **3 dots** (menu) in Chrome.
    - Tap **"Add to Home Screen"** or **"Install App"**.
-   - Now it works like a real app!
+   - Now it works like a native app!
 
 ### Option 2: Local Testing
 If you have Python installed:
@@ -31,6 +39,7 @@ If you have Python installed:
 3. Open `http://localhost:8000` in your browser.
 
 ## Managing Data
-- **Add Income**: Type amount and hit Add.
-- **Delete One**: Tap the red 'X' button.
-- **Clear All**: Tap 'Clear All' to reset.
+- **Add Fare**: Simply tap quick chips or type a specific amount and hit "Add Fare".
+- **Track Expenses**: Switch to the expense tab, select a category, and log your costs.
+- **Undo Mistakes**: Use the 5-second floating toast to instantly undo accidental entries.
+- **Clear All**: Reset your data completely if needed from the History tab.
