@@ -597,7 +597,7 @@ function exportCSV() {
     
     const today = new Date().toISOString().split('T')[0];
     link.setAttribute('href', url);
-    link.setAttribute('download', `shiftledger-report-${today}.csv`);
+    link.setAttribute('download', `farelog-report-${today}.csv`);
     link.style.visibility = 'hidden';
     
     document.body.appendChild(link);
@@ -621,7 +621,7 @@ function exportPDF() {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ShiftLedger Report</title>
+    <title>FareLog Report</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -708,7 +708,7 @@ function exportPDF() {
 </head>
 <body>
     <div class="header">
-        <h1>ShiftLedger Report</h1>
+        <h1>FareLog Report</h1>
         <div class="date">Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</div>
     </div>
     

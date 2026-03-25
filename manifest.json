@@ -1,6 +1,6 @@
 {
-    "name": "ShiftLedger",
-    "short_name": "ShiftLedger",
+    "name": "FareLog",
+    "short_name": "FareLog",
     "start_url": "./",
     "display": "standalone",
     "background_color": "#121212",

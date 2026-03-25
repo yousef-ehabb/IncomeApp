@@ -1,4 +1,4 @@
-# Contributing to ShiftLedger
+# Contributing to FareLog
 
 Thank you for your interest in contributing! This project aims to provide a simple, robust, and privacy-focused tool for drivers.
 
